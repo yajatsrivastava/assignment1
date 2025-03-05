@@ -37,7 +37,7 @@
     const cartTotal = document.getElementById('cart-total');
     const products = [
         new Product(1, 'Mario Kart 8 Deluxe', 49.99, 'mario1.jfif'),
-        new Product(2, 'Super Mario Odyssey', 39.99, 'mario2.WEBP'),
+        new Product(2, 'Super Mario Odyssey', 39.99, 'mario2.jpeg'),
         new Product(3, 'Super Mario Bros Wonder', 29.99, 'mario3.jpg'),
         new Product(4, 'Super Mario 3D World', 39.99, 'mario4.webp')
     ];
@@ -59,7 +59,7 @@
     }
 
     function addToCart(product) {
-        const currentDateTime = new Date().toLocaleString();  // Get the current date and time
+        const currentDateTime = new Date().toLocaleString();
         cart.push({ product, dateAdded: currentDateTime });
         updateCartUI();
     }
