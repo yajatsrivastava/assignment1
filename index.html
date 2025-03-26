@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Clock</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #1a1a1a, #333);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+            width: 90%;
+            max-width: 400px;
+        }
+        #clock {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: #00eaff;
+            text-shadow: 0 0 15px rgba(0, 234, 255, 0.7);
+            margin: 0.5rem 0;
+        }
+        #date {
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            color: #ccc;
+        }
+        .section {
+            margin: 1.5rem 0;
+            padding: 1rem;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+        h2 {
+            margin-top: 0;
+            font-size: 1.2rem;
+        }
+        button {
+            margin: 0.5rem;
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 8px;
+            background: #00eaff;
+            color: #111;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        input {
+            padding: 0.6rem;
+            margin: 0.5rem;
+            border-radius: 8px;
+            border: none;
+            text-align: center;
+            width: 80%;
+            max-width: 200px;
+        }
+        .dark #stopwatch, #countdownDisplay {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #00ff95;
+            margin: 1rem 0;
+        }
+        .light #stopwatch, #countdownDisplay {
+            font-size: 2rem;
+            font-weight: bold;
+            color: indigo;
+            margin: 1rem 0;
+        }
+        .neon #stopwatch, #countdownDisplay {
+            font-size: 2rem;
+            font-weight: bold;
+            color: rgb(130, 0, 61);
+            margin: 1rem 0;
+        }
+        .light {
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            color: #333;
+        }
+        .light .container {
+            background: rgba(255, 255, 255, 0.7);
+            color: #333;
+        }
+        .light #date {
+            color: rgb(130, 0, 0);
+        }
+        .light button {
+            background: rgb(0, 72, 130);
+        }
+        .light #clock {
+            color:#ff0000;
+        }
+        .dark {
+            background: linear-gradient(135deg, #0f0c29, #000000);
+        }
+        .neon {
+            background: linear-gradient(135deg, #0f0f0f, #2a0845);
+        }
+        .neon #clock {
+            color: #ff00ff;
+            text-shadow: 0 0 10px #ff00ff;
+        }
+        .neon button {
+            background: #ff00ff;
+            color: white;
+        }
+        @media (max-width: 480px) {
+            #clock {
+                font-size: 2.5rem;
+            }
+            .section {
+                padding: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Digital Clock</h1>
+        <div id="clock"></div>
+        <div id="date"></div>
+        <div class="section alarm-section">
+            <h2>Set Alarm</h2>
+            <input type="time" id="alarmTime">
+            <button onclick="setAlarm()">Set Alarm</button>
+            <button onclick="clearAlarm()">Clear Alarm</button>
+        </div>
+        <div class="section stopwatch">
+            <h2>Stopwatch</h2>
+            <div id="stopwatch">00:00:00</div>
+            <button onclick="startStopwatch()">Start</button>
+            <button onclick="pauseStopwatch()">Pause</button>
+            <button onclick="resetStopwatch()">Reset</button>
+        </div>
+        <div class="section countdown">
+            <h2>Countdown Timer</h2>
+            <input type="number" id="countdownMinutes" placeholder="Minutes">
+            <button onclick="startCountdown()">Start</button>
+            <div id="countdownDisplay"></div>
+        </div>
+        <div class="section theme-switcher">
+            <h2>Theme</h2>
+            <button onclick="setTheme('light')">Light</button>
+            <button onclick="setTheme('dark')">Dark</button>
+            <button onclick="setTheme('neon')">Neon</button>
+        </div>
+    </div>
+    <script>
+    function updateClock() {
+        let now = new Date();
+        let hours = now.getHours();
+        let minutes = now.getMinutes();
+        let seconds = now.getSeconds();
+        let ampm = hours >= 12 ? "PM" : "AM";
+        hours = hours % 12 || 12; 
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+        document.getElementById("clock").innerHTML = `${hours}:${minutes}:${seconds} ${ampm}`;
+        document.getElementById("date").innerHTML = now.toDateString();
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+    let alarmTime = null;
+    let alarmTimeout = null;
+    function setAlarm() {
+        alarmTime = document.getElementById("alarmTime").value;
+        if (!alarmTime) {
+            alert("Please set a valid alarm time!");
+            return;
+        }
+        alert(`Alarm set for ${alarmTime}`);
+    }
+    function checkAlarm() {
+        let now = new Date();
+        let currentTime = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
+        if (alarmTime === currentTime) {
+            alert("Alarm ringing!");
+            let audio = new Audio("https://www.soundjay.com/button/beep-07.wav");
+            audio.play();
+        }
+    }
+    setInterval(checkAlarm, 1000);
+    function clearAlarm() {
+        alarmTime = null;
+        alert("Alarm cleared.");
+    }
+    let stopwatchInterval;
+    let stopwatchTime = 0;
+    let running = false;
+    function startStopwatch() {
+        if (!running) {
+            running = true;
+            stopwatchInterval = setInterval(() => {
+                stopwatchTime++;
+                let hours = Math.floor(stopwatchTime / 3600);
+                let minutes = Math.floor((stopwatchTime % 3600) / 60);
+                let seconds = stopwatchTime % 60;
+                document.getElementById("stopwatch").innerText = 
+                    `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+            }, 1000);
+        }
+    }
+    function pauseStopwatch() {
+        clearInterval(stopwatchInterval);
+        running = false;
+    }
+    function resetStopwatch() {
+        clearInterval(stopwatchInterval);
+        running = false;
+        stopwatchTime = 0;
+        document.getElementById("stopwatch").innerText = "00:00:00";
+    }
+    let countdownInterval;
+    function startCountdown() {
+        let minutes = document.getElementById("countdownMinutes").value;
+        if (!minutes || minutes <= 0) {
+            alert("Please enter a valid time.");
+            return;
+        }
+        let seconds = minutes * 60;
+        countdownInterval = setInterval(() => {
+            if (seconds <= 0) {
+                clearInterval(countdownInterval);
+                alert("Countdown Complete!");
+                return;
+            }
+
+            let displayMinutes = Math.floor(seconds / 60);
+            let displaySeconds = seconds % 60;
+            document.getElementById("countdownDisplay").innerText = 
+                `${displayMinutes}:${String(displaySeconds).padStart(2, "0")}`;
+            seconds--;
+        }, 1000);
+    }
+    function setTheme(theme) {
+        document.body.className = theme;
+    }
+    </script>
+</body>
+</html>
